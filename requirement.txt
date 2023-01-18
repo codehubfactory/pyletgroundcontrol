@@ -1,0 +1,3 @@
+pip install pymavlink
+pip install dronekit
+pip install opencv-python
