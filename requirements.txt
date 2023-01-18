@@ -1,3 +1,6 @@
 dronekit==2.9.2
 flet==0.3.2
+numpy==1.23.2
+opencv_python==4.6.0.66
+Pillow==9.4.0
 pymavlink==2.4.35

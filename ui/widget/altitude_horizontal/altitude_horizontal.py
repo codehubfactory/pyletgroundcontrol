@@ -3,18 +3,8 @@ import cv2
 import math
 from PIL import Image
 import random
-# import serial
-# import json
-# import board
-# import busio
-# import adafruit_mpu6050
-
 brown = (19, 69, 139)
 blue = (255, 255, 0)
-#
-# i2c = busio.I2C(board.SCL, board.SDA)
-# mpu = adafruit_mpu6050.MPU6050(i2c)
-
 class Display:
     width = 700
     height = 700
