@@ -3,6 +3,7 @@ import cv2
 import math
 from PIL import Image
 import random
+import base64
 brown = (19, 69, 139)
 blue = (255, 255, 0)
 class Display:
@@ -11,7 +12,8 @@ class Display:
     radius = 250
     angle = 85
     previous = -1
-
+    def __init__(self) -> None:
+        self.make_image()
     def rotate_image(self, image, angle):
         (h, w) = image.shape[:2]
         (cX, cY) = (w // 2, h // 2)
@@ -140,7 +142,7 @@ class Display:
             start -= (1.0 / 18.0) * pitch_range
             count += 1
 
-    def make_image(self, phi, theta, psi, pitch_range=180, bank_range=150):
+    def make_image(self, phi=0, theta=0, psi=0, pitch_range=180, bank_range=150):
         bank = -1 * phi
         pitch = -theta / pitch_range
         azimuth = psi
@@ -182,6 +184,7 @@ class Display:
         compass_h, compass_w, compass_ch = compass.shape
         factor = (1.0 * self.height) / compass_h
         compass = cv2.resize(compass, None, fx=factor, fy=factor)
+        self.compass_image=compass
         image_all = np.hstack((image, compass))
         '''
         display = "Pitch:" + str(theta) + "    Bank:" + str(bank)+ "    Azimuth:" + str(azimuth)
@@ -196,8 +199,17 @@ class Display:
         height = int(image.shape[1] * height_percent / 100)
         dim = (width, height)
         image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
+        self.image=image
         return image
         # cv2.imshow("Display", image)
+    # @property
+    def control2base64(self)->bytes:
+        _, im_arr = cv2.imencode('.jpg', self.image)  # im_arr: image in Numpy one-dim array format.
+        im_bytes = im_arr.tobytes()
+        im_b64 = base64.b64encode(im_bytes)
+        
+        return im_b64
+    
 
 
 def main():
@@ -276,6 +288,8 @@ def main():
         # 
         # phi, theta, psi=mpu.acceleration
         cv2.imshow("display",dis.make_image(phi, theta, psi))
+        print(dis.control2base64())
+        
         # # dis.make_image()
         # print(f"phi {phi} - theta {theta} - psi {psi}")
 
